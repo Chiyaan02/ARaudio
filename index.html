@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- A-Frame Library -->
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <!-- MindAR Image Tracking Library -->
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  </head>
+  <body>
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      
+      <a-assets>
+        <audio id="myAudio" src="FBdownload.mp3" preload="auto" crossorigin="anonymous"></audio>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0">
+        <!-- Optional Visual Audio Icon -->
+        <a-circle color="#14b8a6" radius="0.5" position="0 0 0" rotation="0 0 0" opacity="0.8">
+          <a-text value="AUDIO PLAYING" align="center" position="0 0 0.1" scale="0.5 0.5 0.5" color="#ffffff"></a-text>
+        </a-circle>
+      </a-entity>
+
+    </a-scene>
+
+    <script>
+      // Audio Control Script
+      const sceneEl = document.querySelector('a-scene');
+      const audio = document.querySelector('#myAudio');
+      
+      sceneEl.addEventListener("targetFound", event => {
+        console.log("Target found - Playing Audio");
+        audio.play().catch(e => console.log("Audio autoplay prevented by browser policy:", e));
+      });
+
+      sceneEl.addEventListener("targetLost", event => {
+        console.log("Target lost - Stopping Audio");
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    </script>
+  </body>
+</html>
